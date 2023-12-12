@@ -8,7 +8,7 @@ class Program
     static void Main()
     {
         //aqui se agrega la direccion de la carpeta donde buscara los archivos y con ellos hara un array(arreglo)
-        string[] archivos = Directory.GetFiles("D:\\Documentos 2\\UniKino\\Algebra");
+        string[] archivos = Directory.GetFiles("D:\\Documentos 2\\UniKino\\Algebra");//ajusta la direccion de carpeta a una deseada
         //hara saber al usuario la cantidad de archivos que contiene carpeta
         Console.WriteLine($"Número total de archivos: {archivos.Length}");
 
@@ -104,7 +104,7 @@ class Program
         //se utiliza el stop watch para saber cuanto tardo en leer el archivo
         Stopwatch stopwatch = new Stopwatch();
         stopwatch.Start();
-        //se utiliza un try catch por si surgen errores al realizar la lectura y de ser asi, que diga la razon del error
+        //se utiliza un try catch por si surgen errores al realizar la lectura 
         try
         {
             string contenido = File.ReadAllText(archivo);
@@ -113,6 +113,7 @@ class Program
             double tiempoTotal = stopwatch.Elapsed.TotalSeconds;// se guarda en tiempoTotal el tiempo que duro la ejecucion 
             Console.WriteLine($"Tiempo total de lectura del archivo fue de {tiempoTotal} segundos");
         }
+        //si ocurre un error, describe la razon del error
         catch (Exception ex)
         {
             Console.WriteLine($"Error al procesar el archivo {archivo}: {ex.Message}");
