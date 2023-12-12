@@ -8,24 +8,24 @@ class Program
     static void Main()
     {
         //aqui se agrega la direccion de la carpeta donde buscara los archivos y con ellos hara un array(arreglo)
-        string[] archivos = Directory.GetFiles("D:\\Documentos 2\\UniKino\\Algebra");//ajusta la direccion de carpeta a una deseada
+        string[] docs = Directory.GetFiles("D:\\Documentos 2\\UniKino\\Algebra");//ajusta la direccion de carpeta a una deseada
         //hara saber al usuario la cantidad de archivos que contiene carpeta
-        Console.WriteLine($"Número total de archivos: {archivos.Length}");
+        Console.WriteLine($"Número total de archivos: {docs.Length}");
 
 
         Console.WriteLine("\nProceso Síncrono:");// primero se ejecutara el método síncrono
-        var tiempoSincrono = ProcesoSincrono(archivos);
+        var syncTime = SyncProcess(docs);
 
         Console.WriteLine("\nProceso Paralelo:");// despues se ejecutara el método paralelo
-        var tiempoParalelo = ProcesoParalelo(archivos);
+        var parallelTime = ParallelProcess(docs);
 
-        CompararTiempos(tiempoSincrono, tiempoParalelo);// y por ultimo se compararán ambostiempos para saber que método fue más rapido de terminar la tarea
+        CompareTimes(syncTime, parallelTime);// y por ultimo se compararán ambostiempos para saber que método fue más rapido de terminar la tarea
 
         Console.ReadLine();//a la espera de tocar una tecla para cerrar la ventana
     }
 
     //aqui se codea el proceso sincrono
-    static double ProcesoSincrono(string[] archivos)
+    static double SyncProcess(string[] docs)
     {
         //se utiliza stopwatch para contar el tiempo de ejecicion con start y stop
         Stopwatch stopwatch = new Stopwatch();
@@ -35,22 +35,22 @@ class Program
         Console.WriteLine($"Tiempo de inicio sincrono: {DateTime.Now:HH:mm:ss}");
 
         //se utiliza un foreach para aplicar la accion por cada uno de los archivos dentro de la carpeta
-        foreach (var archivo in archivos)
+        foreach (var doc in docs)
         {
             // se pide la accion de leer el archivo, incluye descripcion de que archivo se lee y el tiempo que le toma leerlo
-            LeerArchivo(archivo);
+            ReadDoc(doc);
         }
 
         stopwatch.Stop();
         //se captura la hora en tiempo real de cuando se termina el programa sincrono
         Console.WriteLine($"Tiempo final sincrono: {DateTime.Now:HH:mm:ss}");
-        double tiempoTotal = stopwatch.Elapsed.TotalSeconds;// se guarda en tiempoTotal el tiempo que duro la ejecucion 
-        Console.WriteLine($"Tiempo total de procesamiento sincrono: {tiempoTotal} segundos");
-        return tiempoTotal;
+        double totalTime = stopwatch.Elapsed.TotalSeconds;// se guarda en tiempoTotal el tiempo que duro la ejecucion 
+        Console.WriteLine($"Tiempo total de procesamiento sincrono: {totalTime} segundos");
+        return totalTime;
     }
 
     //aqui se codea el proceso paralelo
-    static double ProcesoParalelo(string[] archivos)
+    static double ParallelProcess(string[] docs)
     {
         //se utiliza stopwatch para contar el tiempo de ejecicion con start y stop
         Stopwatch stopwatch = new Stopwatch();
@@ -60,34 +60,34 @@ class Program
         Console.WriteLine($"Tiempo de inicio paralelo: {DateTime.Now:HH:mm:ss}");
 
         //se utiliza un parallel foreach para aplicar la accion por cada uno de los archivos dentro de la carpeta en forma paralela
-        Parallel.ForEach(archivos, archivo =>
+        Parallel.ForEach(docs, doc =>
         {
             // se pide la accion de leer el archivo
-            LeerArchivo(archivo);
+            ReadDoc(doc);
         });
 
         stopwatch.Stop();
         //se captura la hora en tiempo real de cuando se termina el programa sincrono
         Console.WriteLine($"Tiempo final paralelo: {DateTime.Now:HH:mm:ss}");
-        double tiempoTotal = stopwatch.Elapsed.TotalSeconds;// se guarda en tiempoTotal el tiempo que duro la ejecucion 
-        Console.WriteLine($"Tiempo total de procesamiento paralelo: {tiempoTotal} segundos");
-        return tiempoTotal;
+        double totalTime = stopwatch.Elapsed.TotalSeconds;// se guarda en tiempoTotal el tiempo que duro la ejecucion 
+        Console.WriteLine($"Tiempo total de procesamiento paralelo: {totalTime} segundos");
+        return totalTime;
     }
 
     //aqui se codea la comparativa de tiempos entre ambos procesos
-    static void CompararTiempos(double tiempoSincrono, double tiempoParalelo)
+    static void CompareTimes(double syncTime, double parallelTime)
     {
         //si el proceso sincrono tardo menos tiempo, esto aparecerá en consola
-        if (tiempoSincrono < tiempoParalelo)
+        if (syncTime < parallelTime)
         {
             Console.WriteLine("\n¡El proceso síncrono fue más rápido!");
-            Console.WriteLine($"Con una diferencia de {tiempoParalelo - tiempoSincrono} segundos");
+            Console.WriteLine($"Con una diferencia de {parallelTime - syncTime} segundos");
         }
         //si el proceso paralelo tardo menos tiempo, esto aparecerá en consola
-        else if (tiempoSincrono > tiempoParalelo)
+        else if (syncTime > parallelTime)
         {
             Console.WriteLine("\n¡El proceso paralelo fue más rápido!");
-            Console.WriteLine($"La diferencia de tiempos fue de {tiempoSincrono - tiempoParalelo} segundos");
+            Console.WriteLine($"La diferencia de tiempos fue de {syncTime - parallelTime} segundos");
         }
         //si fue un empate, esto aparecerá en consola
         else
@@ -98,7 +98,7 @@ class Program
 
 
     //aqui se codea la accion de leer un archivo
-    static void LeerArchivo(string archivo)
+    static void ReadDoc(string doc)
         
     {
         //se utiliza el stop watch para saber cuanto tardo en leer el archivo
@@ -107,16 +107,16 @@ class Program
         //se utiliza un try catch por si surgen errores al realizar la lectura 
         try
         {
-            string contenido = File.ReadAllText(archivo);
-            Console.WriteLine($"Procesando archivo: {archivo}");
+            string content = File.ReadAllText(doc);
+            Console.WriteLine($"Procesando archivo: {doc}");
             stopwatch.Stop();
-            double tiempoTotal = stopwatch.Elapsed.TotalSeconds;// se guarda en tiempoTotal el tiempo que duro la ejecucion 
-            Console.WriteLine($"Tiempo total de lectura del archivo fue de {tiempoTotal} segundos");
+            double totalTime = stopwatch.Elapsed.TotalSeconds;// se guarda en tiempoTotal el tiempo que duro la ejecucion 
+            Console.WriteLine($"Tiempo total de lectura del archivo fue de {totalTime} segundos");
         }
         //si ocurre un error, describe la razon del error
         catch (Exception ex)
         {
-            Console.WriteLine($"Error al procesar el archivo {archivo}: {ex.Message}");
+            Console.WriteLine($"Error al procesar el archivo {doc}: {ex.Message}");
         }
         
     }
